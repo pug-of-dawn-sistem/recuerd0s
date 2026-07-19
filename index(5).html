@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recuerdos</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#111;color:#fff}
+header{position:sticky;top:0;background:#1b1b1bcc;padding:15px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(8px)}
+h1{margin:0}button{padding:10px 16px;border:none;border-radius:8px;background:#ff4081;color:#fff;cursor:pointer}
+#gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;padding:15px}
+.card{overflow:hidden;border-radius:12px;background:#222}
+img,video{width:100%;display:block}
+#viewer{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center}
+#viewer img{max-width:95%;max-height:95%}
+@media(max-width:768px){#gallery{grid-template-columns:1fr}h1{font-size:22px}}
+</style></head><body>
+<header><h1>❤️ Recuerdos</h1><button id="musicBtn">🎵 Música</button></header>
+<div id="gallery"></div>
+<div id="viewer" onclick="this.style.display='none'"><img id="big"></div>
+<audio id="music" loop><source src="musica.mp3" type="audio/mpeg"></audio>
+<script>
+const audio=document.getElementById('music');
+let playing=false;
+document.body.addEventListener('click',()=>{if(!playing){audio.play().catch(()=>{});playing=true;}},{once:true});
+musicBtn.onclick=()=>{if(audio.paused){audio.play();musicBtn.textContent='⏸ Pausar';}else{audio.pause();musicBtn.textContent='🎵 Música';}};
+fetch('media.json').then(r=>r.json()).then(files=>{
+ const g=gallery;
+ files.forEach(f=>{
+  const c=document.createElement('div');c.className='card';
+  if(/\.(mp4|webm|mov)$/i.test(f)){let v=document.createElement('video');v.src=f;v.controls=true;c.appendChild(v);}
+  else{let i=document.createElement('img');i.src=f;i.onclick=()=>{big.src=f;viewer.style.display='flex';};c.appendChild(i);}
+  g.appendChild(c);
+ });
+}).catch(()=>gallery.innerHTML='<p style="padding:20px">No se encontró media.json</p>');
+</script></body></html>
