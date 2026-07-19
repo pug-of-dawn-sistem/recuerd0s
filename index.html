@@ -8,73 +8,73 @@
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#111;
- color:#fff
+margin:0;
+font-family:Arial,sans-serif;
+background:#111;
+color:#fff
 }
+
 header{
- position:sticky;
- top:0;
- background:#1b1b1bcc;
- padding:15px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- backdrop-filter:blur(8px)
+position:sticky;
+top:0;
+background:#1b1b1bcc;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+backdrop-filter:blur(8px)
 }
+
 h1{margin:0}
 
 button{
- padding:10px 16px;
- border:none;
- border-radius:8px;
- background:#ff4081;
- color:#fff;
- cursor:pointer
+padding:10px 16px;
+border:none;
+border-radius:8px;
+background:#ff4081;
+color:white;
+cursor:pointer
 }
 
 #gallery{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
- gap:15px;
- padding:15px
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+padding:15px
 }
 
 .card{
- overflow:hidden;
- border-radius:12px;
- background:#222
+overflow:hidden;
+border-radius:12px;
+background:#222
 }
 
 img,video{
- width:100%;
- display:block
+width:100%;
+display:block
 }
 
 #viewer{
- position:fixed;
- inset:0;
- background:#000d;
- display:none;
- align-items:center;
- justify-content:center
+position:fixed;
+inset:0;
+background:#000d;
+display:none;
+align-items:center;
+justify-content:center
 }
 
 #viewer img{
- max-width:95%;
- max-height:95%
+max-width:95%;
+max-height:95%
 }
 
 @media(max-width:768px){
- #gallery{
-  grid-template-columns:1fr
- }
- h1{
-  font-size:22px
- }
+#gallery{
+grid-template-columns:1fr
+}
 }
 </style>
+
 </head>
 
 <body>
@@ -84,19 +84,23 @@ img,video{
 <button id="musicBtn">🎵 Música</button>
 </header>
 
+
 <div id="gallery"></div>
+
 
 <div id="viewer" onclick="this.style.display='none'">
 <img id="big">
 </div>
 
-<audio id="music" loop></audio>
+
+<audio id="music"></audio>
 
 
 <script>
 
-const audio=document.getElementById('music');
-const musicBtn=document.getElementById('musicBtn');
+const audio=document.getElementById("music");
+const musicBtn=document.getElementById("musicBtn");
+
 
 const songs=[
 "musica.mp3",
@@ -104,7 +108,9 @@ const songs=[
 "musica3.mp3"
 ];
 
+
 let currentSong=0;
+
 
 audio.src=songs[currentSong];
 
@@ -115,20 +121,21 @@ if(audio.paused){
 
 audio.play()
 .then(()=>{
-musicBtn.textContent='⏸ Pausar';
+musicBtn.textContent="⏸ Pausar";
 })
-.catch(e=>{
-console.log(e);
+.catch(error=>{
+console.log(error);
 });
 
 }else{
 
 audio.pause();
-musicBtn.textContent='🎵 Música';
+musicBtn.textContent="🎵 Música";
 
 }
 
 };
+
 
 
 audio.onended=()=>{
@@ -140,58 +147,78 @@ currentSong=0;
 }
 
 audio.src=songs[currentSong];
+
 audio.play();
 
 };
 
 
 
-fetch('media.json')
+fetch("media.json")
+
 .then(r=>r.json())
+
 .then(files=>{
 
-const g=document.getElementById('gallery');
+
+const gallery=document.getElementById("gallery");
+
 
 files.forEach(f=>{
 
-const c=document.createElement('div');
-c.className='card';
+
+const card=document.createElement("div");
+card.className="card";
 
 
 if(/\.(mp4|webm|mov|mkv|avi)$/i.test(f)){
 
-let v=document.createElement('video');
-v.src=f;
-v.controls=true;
-c.appendChild(v);
+
+let video=document.createElement("video");
+
+video.src=f;
+
+video.controls=true;
+
+card.appendChild(video);
+
 
 }else{
 
-let i=document.createElement('img');
 
-i.src=f;
+let img=document.createElement("img");
 
-i.onclick=()=>{
+img.src=f;
 
-document.getElementById('big').src=f;
-document.getElementById('viewer').style.display='flex';
+
+img.onclick=()=>{
+
+document.getElementById("big").src=f;
+
+document.getElementById("viewer").style.display="flex";
 
 };
 
-c.appendChild(i);
+
+card.appendChild(img);
+
 
 }
 
 
-g.appendChild(c);
+gallery.appendChild(card);
+
 
 });
 
 
 })
+
+
 .catch(()=>{
 
-gallery.innerHTML='<p style="padding:20px">No se encontró media.json</p>';
+document.getElementById("gallery").innerHTML=
+"<p style='padding:20px'>No se encontró media.json</p>";
 
 });
 
